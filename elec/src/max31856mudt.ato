@@ -1,2 +1,75 @@
-module Max31856mudt:
-    signal gnd
+import SPI from "generics/interfaces.ato"
+import Power from "generics/interfaces.ato"
+import Capacitor from "generics/capacitors.ato"
+import Pair from "generics/interfaces.ato"
+import DiffPair from "generics/interfaces.ato"
+
+component _MAX31856MUD_T:
+    # component MAX31856MUD+T
+    footprint = "TSSOP-14_L5.0-W4.4-P0.65-LS6.4-BL"
+    lcsc_id = "C2653162"
+    mpn = "C2653162"
+    # pins
+    signal AGND ~ pin 1
+    signal BIAS ~ pin 2
+    signal TP ~ pin 3
+    signal TN ~ pin 4
+    signal AVDD ~ pin 5
+    signal DNC ~ pin 6
+    signal DRDY_ ~ pin 7
+    signal DVDD ~ pin 8
+    signal CS_ ~ pin 9
+    signal SCK ~ pin 10
+    signal SDO ~ pin 11
+    signal SDI ~ pin 12
+    signal FAULT_ ~ pin 13
+    signal DGND ~ pin 14
+
+module MAX31856MUDT:
+    ic = new _MAX31856MUD_T
+    spi = new SPI
+    power = new Power
+    fault = new Pair
+    data_ready = new Pair
+    tc_input = new DiffPair
+
+    # Power
+    power.vcc ~ ic.DVDD
+    power.vcc ~ ic.AVDD
+    power.gnd ~ ic.DGND
+    power.gnd ~ ic.AGND
+
+    # bypass cap
+    cap1 = new Capacitor
+    cap1.power ~ power
+    cap1.value = 100nF +/- 20%
+    cap1.package = "0402"
+
+    cap2 = new Capacitor
+    cap2.power ~ power
+    cap2.value = 100nF +/- 20%
+    cap2.package = "0402"
+
+    # TC interface
+    tc_input.p ~ ic.TP
+    tc_input.n ~ ic.TN
+    tc_input.n ~ ic.BIAS
+
+    # TC caps
+    diff_cap = new Capacitor
+    diff_cap.1 ~ tc_input.p
+    diff_cap.2 ~ tc_input.n
+    diff_cap.value = 100nF +/- 20%
+    diff_cap.package = "0402"
+
+    tp_cap = new Capacitor
+    tp_cap.1 ~ tc_input.p
+    tp_cap.2 ~ power.gnd
+    tp_cap.value = 10nF +/- 20%
+
+
+    tn_cap = new Capacitor
+    tn_cap.1 ~ tc_input.n
+    tn_cap.2 ~ power.gnd
+    tn_cap.value = 10nF +/- 20%
+
