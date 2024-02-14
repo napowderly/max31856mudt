@@ -39,6 +39,13 @@ module MAX31856MUDT:
     power.gnd ~ ic.DGND
     power.gnd ~ ic.AGND
 
+    # SPI
+    spi.sck ~ ic.SCK
+    spi.mosi ~ ic.SDI
+    spi.miso ~ ic.SDO
+    spi.cs ~ ic.CS_
+    spi.gnd ~ power.gnd
+
     # bypass cap
     cap1 = new Capacitor
     cap1.power ~ power
@@ -65,11 +72,13 @@ module MAX31856MUDT:
     tp_cap = new Capacitor
     tp_cap.1 ~ tc_input.p
     tp_cap.2 ~ power.gnd
-    tp_cap.value = 10nF +/- 20%
+    tp_cap.value = 22nF +/- 20%
+    tp_cap.package = "0402"
 
 
     tn_cap = new Capacitor
     tn_cap.1 ~ tc_input.n
     tn_cap.2 ~ power.gnd
-    tn_cap.value = 10nF +/- 20%
+    tn_cap.value = 22nF +/- 20%
+    tn_cap.package = "0402"
 

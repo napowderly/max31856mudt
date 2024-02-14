@@ -1,6 +1,6 @@
 ato-version: ^0.2.0
 builds:
   default:
-    entry: elec/src/max31856mudt.ato:Max31856mudt
+    entry: elec/src/max31856mudt.ato:MAX31856MUDT
 dependencies:
 - generics
